@@ -17,67 +17,21 @@ namespace Ucu.Poo.Ocp
         /// <returns></returns>
         public bool CanEnter(Membership membership, DateTime date, int hour)
         {
-            DayOfWeek dayOfWeek = date.DayOfWeek;
+            Membresia persona;
 
-            // De lunes a viernes temprano en la mañana
-            if ((dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday ||
-                dayOfWeek == DayOfWeek.Wednesday || dayOfWeek == DayOfWeek.Thursday ||
-                dayOfWeek == DayOfWeek.Friday) && hour >= 6 && hour < 10)
+            if (membership == Membership.Basic)
             {
-                if (membership == Membership.Premium)
-                {
-                    return true;
-                }
-
-                return false;
+                persona = new Basic();
             }
-
-            // De lunes a viernes durante el día antes de la hora pico
-            if ((dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday ||
-                dayOfWeek == DayOfWeek.Wednesday || dayOfWeek == DayOfWeek.Thursday ||
-                dayOfWeek == DayOfWeek.Friday) && hour >= 10 && hour < 17)
+            else if (membership == Membership.Premium)
             {
-                if (membership == Membership.Premium ||
-                    membership == Membership.Basic ||
-                    membership == Membership.DayPass)
-                {
-                    return true;
-                }
-
-                return false;
+                persona = new Premium();
             }
-
-            // De lunes a viernes en hora pico
-            if ((dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday ||
-                dayOfWeek == DayOfWeek.Wednesday || dayOfWeek == DayOfWeek.Thursday ||
-                dayOfWeek == DayOfWeek.Friday) && hour >= 17 && hour < 21)
+            else
             {
-                if (membership == Membership.Premium || membership == Membership.Basic)
-                {
-                    return true;
-                }
-
-                return false;
+                persona = new DayPass();
             }
-
-            // Sábados
-            if (dayOfWeek == DayOfWeek.Saturday && hour >= 8 && hour < 20)
-            {
-                if (membership == Membership.Premium || membership == Membership.Basic)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            // Domingos
-            if (dayOfWeek == DayOfWeek.Sunday)
-            {
-                return false;
-            }
-
-            return false;
+            return persona.PuedeIngresar(date, hour);
         }
     }
 }
